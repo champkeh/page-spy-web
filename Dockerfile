@@ -1,7 +1,7 @@
 FROM node:19-buster AS frontend
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm && pnpm i
 COPY . .
 RUN npm run build:client
 
@@ -15,5 +15,6 @@ RUN go build -o main .
 
 FROM debian:bullseye-slim
 WORKDIR /app
-COPY --from=backend /app/main /app/main
+COPY --from=backend /app/main ./
 CMD ["/app/main"]
+EXPOSE 6752
